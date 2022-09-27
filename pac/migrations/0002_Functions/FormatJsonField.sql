@@ -1,0 +1,13 @@
+﻿CREATE OR ALTER FUNCTION dbo.FormatJsonField
+(
+	@JSON NVARCHAR(MAX)
+)
+
+RETURNS NVARCHAR(MAX)
+AS
+BEGIN
+	DECLARE @NewJSON NVARCHAR(MAX);
+	SELECT @NewJSON = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE (@JSON, '\', ''), '}",','},'), ':"{', ':{'), '""', '{}'), '}"', '}');
+	RETURN @NewJSON
+END
+

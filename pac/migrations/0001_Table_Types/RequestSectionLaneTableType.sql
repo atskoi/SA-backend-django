@@ -1,0 +1,51 @@
+﻿IF NOT EXISTS (SELECT *
+FROM sys.types
+WHERE is_table_type = 1 AND name = 'RequestSectionLaneTableType')
+BEGIN
+CREATE TYPE [dbo].[RequestSectionLaneTableType] AS TABLE
+(
+	[IsActive] [bit] NOT NULL,
+	[IsInactiveViewable] [bit] NOT NULL,
+	[RequestSectionLaneID] [bigint] NOT NULL,
+	[OriginID] [bigint] NOT NULL,
+	[DestinationID] [bigint] NOT NULL,
+	[IsPublished] [bit] NOT NULL,
+	[IsEdited] [bit] NOT NULL,
+	[IsDuplicate] [bit] NOT NULL,
+	[IsBetween] [bit] NOT NULL,
+	[Commitment] [nvarchar](max) NOT NULL,
+	[CustomerRate] [nvarchar](max) NOT NULL,
+	[CustomerDiscount] [nvarchar](max) NOT NULL,
+	[DrRate] [nvarchar](max) NOT NULL,
+	[PartnerRate] [nvarchar](max) NOT NULL,
+	[PartnerDiscount] [nvarchar](max) NOT NULL,
+	[Profitability] [nvarchar](max) NOT NULL,
+	[PickupCount] [int] NULL,
+	[DeliveryCount] [int] NULL,
+	[DockAdjustment] [numeric](19, 6) NULL,
+	[Margin] [nvarchar](max) NOT NULL,
+	[Density] [nvarchar](max) NOT NULL,
+	[PickupCost] [nvarchar](max) NOT NULL,
+	[DeliveryCost] [nvarchar](max) NOT NULL,
+	[AccessorialsValue] [nvarchar](max) NOT NULL,
+	[AccessorialsPercentage] [nvarchar](max) NOT NULL,
+	[DoNotMeetCommitment] [bit] NOT NULL,
+	[PricingRates] [nvarchar](max) NULL,
+	[WorkflowErrors] [nvarchar](max) NULL,
+	[IsExcluded] [bit] NULL,
+	[IsFlagged] [bit] NULL,
+	[RequestSectionLaneSourceID] [bigint] NULL,
+	[Deficit] [nvarchar](max) NULL,
+	[ImpactPercentage] [nvarchar](max) NULL,
+	[EmbeddedCost] [nvarchar](max) NULL,
+	[Cost] [nvarchar](max) NOT NULL,
+	[TMID] [int] NULL,
+	[DestinationTypeID] [bigint] NOT NULL,
+	[OriginTypeID] [bigint] NOT NULL,
+	[RequestSectionID] [bigint] NOT NULL,
+	INDEX IX1 NONCLUSTERED([DestinationTypeID] ASC),
+	INDEX IX2 NONCLUSTERED([DestinationID] ASC),
+	INDEX IX9 NONCLUSTERED([OriginTypeID] ASC),
+	INDEX IX10 NONCLUSTERED([OriginID] ASC)
+)
+END

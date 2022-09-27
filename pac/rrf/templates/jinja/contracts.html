@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Contract</title>
+    <style>
+        h1 {
+          text-align: center;
+        }
+        hr {
+            position: relative;
+            top: 20px;
+            border: none;
+            height: 12px;
+            background: black;
+            margin-bottom: 12px;
+        }
+        hr.page_break {
+            height: 24px;
+        }
+        div.header_div {
+            width:33%;
+            padding-left:67%
+        }
+        span{
+          text-align: left;
+        }
+        span.title{
+           font-weight:bold;
+        }
+
+      </style>
+</head>
+<body>
+        {% set ns=namespace() %}
+        {% set ns.page_no = 1 %}
+        {% set ns.lt = context.language_text %}
+        {% macro blank_when_empty(value) %}
+          {{ value if value else ''}}
+        {% endmacro %}
+        {% macro header() %}
+            {% if ns.page_no == 1 %}
+            <div class="header_div" style="width:33%; padding-left:67%">
+            {% else %}
+            <div class="header_div page-break-before">
+            {% endif %}
+                <table width="100%">
+                    <tr>
+                        <td width="75%"></td>
+                        <td width="25%">
+                            <span class="title">Rev # </span>&nbsp;&nbsp; <span class="title">Page {{ ns.page_no}} {{ ns.lt.of }} 6</span><br/>
+                            <span class="title">Tariff </span><span></span><br/>
+                            <span>{{ context.request_header.customer_name }}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+             {% set ns.page_no = ns.page_no + 1  %}
+        {% endmacro %}
+        {% macro twodecs (value) %}
+            {{ '{:0.2f}'.format(value) if value else '' }}
+        {% endmacro %}
+        {{ header() }}
+      <h1> {{ ns.lt['DRAFT COPY - NOT FOR DISTRIBUTION'] }}</h1>
+
+        <table>
+            <tr>
+                <td><span class="title">{{ ns.lt.CUSTOMER }}:</span><span> {{ context.request_header.customer_name }}</span></td>
+                <td></td>
+                <td><span class="title">{{ ns.lt['D&R ACCT'] }} #:</span><span> {{ context.customer.account_number}}</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><span class="title">{{ ns.lt.ADDRESS }}:</span><span> {{ context.customer.customer_address_line_1}}</span></td>
+                <td></td>
+                <td><span class="title">{{ ns.lt.EFFECTIVE }}:</span><span> {{ context.request_info.effective_date}}</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><span class="title">{{ context.customer.city}} {{ context.customer.postal_code}}</span></td>
+                <td></td><td><span class="title">{{ ns.lt.EXPIRY }}:</span><span></span></td>
+                <td></td>
+            </tr>
+            <tr><td><span class="title">{{ ns.lt.TELEPHONE }}:</span><span> {{ context.customer.phone or '' }}</span></td><td></td><td><span></span></td><td></td></tr>
+            <tr>
+                <td><span class="title">{{ ns.lt.FAX }}:</span><span></span></td>
+                <td></td><td><span class="title">{{ ns.lt['ISSUE DATE'] }}:</span><span></span> </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><span></span></td>
+                <td></td>
+                <td><span class="title">{{ ns.lt['PRICING OFFICIAL'] }}:</span> <span></span></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <hr/>
+        <hr/>
+                <p><span class="title">{{ ns.lt.COMMODITY }}:</span></p>
+        <hr/>
+        <hr/>
+
+
+      <h1>{{ ns.lt['TERMS AND CONDITIONS'] }}</h1>
+          {% for term in context.terms %}
+            <p>{{ loop.index }}. {{ term.title }}</p>
+            <p> {{ term.text }}</p>
+          {% endfor %}
+
+        <hr/>
+        <hr/>
+
+      <h1>{{ ns.lt['CUSTOM TERMS AND CONDITIONS'] }}</h1>
+          {% for term in context.custom_terms %}
+            <p>{{ loop.index }}. Custom Term</p>
+            <p> {{ term.CustomTerms }}</p>
+          {% endfor %}
+
+        <hr class="page_break"/>
+
+        {{ header() }}
+      <h1>{{ ns.lt['CUSTOMER INFORMATION PROFILE'] }}</h1>
+
+        <div>
+            <h2><span class="title">{{ ns.lt['AVERAGE SIZE OF SHIPMENTS'] }}:</span><span>  {{ context.request_review_data.avg_shipment_size}} {{ 'LBS' if context.request_review_data.avg_shipment_size else ''}}</span> </h2>
+            <h2><span class="title">{{ ns.lt['AVERAGE DENSITY'] }}:</span><span>  {{ context.request_review_data.avg_density}} {{ 'PCF' if context.request_review_data.avg_density else ''}}</span></h2>
+            <h2><span class="title">{{ ns.lt['AVERAGE VOLUME PER MONTH'] }}:</span><span>  {{ context.request_review_data.avg_monthly_volume}} {{ 'LBS' if context.request_review_data.avg_monthly_volume else ''}}</span></h2>
+        </div>
+
+        <hr/>
+
+        <table>
+            <tr><td width="33.3%"><span class="title">{{ ns.lt['PRESENTED BY'] }}:</span></td><td width="33.3%"></td><td width="33.3%"><span class="title">{{ ns.lt['ACCEPTED BY'] }}:</span></td><td></td></tr>
+            <tr><td><span class="title">{{ ns.lt.SIGNATURE }}</span></td><td></td><td><span class="title">{{ ns.lt.SIGNATURE }}</span></td><td></td></tr>
+            <tr><td><span class="title">{{ ns.lt.TITLE }}</span></td><td></td><td><span class="title">{{ ns.lt.TITLE }}</span></td><td></td></tr>
+            <tr><td><span class="title">{{ ns.lt.DATE }}:</span></td><td></td><td><span class="title">{{ ns.lt.DATE }}</span></td><td></td></tr>
+        </table>
+        <hr/>
+
+        {{ header() }}
+       <p><span class="title">{{ ns.lt['Service Level'] }}</span><span> {{ context.service_level}} </span></p>
+        <hr/>
+      {% for section_id,section in context.sections.items() %}
+          <table>
+            <thead>
+              <tr>
+                <th>{{ ns.lt.Origin }}</th>
+                <th>{{ ns.lt.Destination }}</th>
+                  {% for col in section.lane_cols %}
+                    <th> {{ 'CWT' if col.isdigit() else '' }}</th>
+                  {% endfor %}
+
+              </tr>
+              <tr>
+                <th></th>
+                <th></th>
+                  {% for col in section.lane_cols %}
+                    <th> {{ col }}</th>
+                  {% endfor %}
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for lane in section.lanes %}
+                <tr>
+                  <td>{{lane['origin'] }}</td>
+                  <td>{{ lane.destination }}</td>
+                  {% for col in section.lane_cols %}
+                    <td> {{ lane[col] if col in lane else '' }}</td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+      {% endfor %}
+
+        <hr class="page_break"/>
+
+        {{ header() }}
+      <h1>{{ ns.lt['ACCESSORIAL OVERRIDES'] }}</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>{{ ns.lt.Origin }}</th>
+            <th>{{ ns.lt['Origin Type'] }}</th>
+            <th>{{ ns.lt.Destination }}</th>
+            <th>{{ ns.lt['Destination Type'] }}</th>
+            <th>{{ ns.lt.Section }}</th>
+            <th>{{ ns.lt['Service Level'] }}</th>
+            <th>{{ ns.lt.Between }}</th>
+            <th>{{ ns.lt['Shipping Instruction'] }}</th>
+            <th>{{ ns.lt['Range Type'] }}</th>
+            <th>{{ ns.lt['Minimum Change'] }}</th>
+            <th>{{ ns.lt['Maximum Change'] }}</th>
+            <th>{{ ns.lt['Minimum Shipment Value'] }}</th>
+            <th>{{ ns.lt['Maximum Shipment Value'] }}</th>
+            <th>{{ ns.lt.Change }}</th>
+            <th>{{ ns.lt['Minimum Standard Change'] }}</th>
+            <th>{{ ns.lt.Usage }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for acc in context.accessorials %}
+            <tr>
+              <td>{{ blank_when_empty(acc.OriginName) }}</td>
+              <td>{{ blank_when_empty(acc.OriginType) }}</td>
+              <td>{{ blank_when_empty(acc.DestinationName) }}</td>
+              <td>{{ blank_when_empty(acc.DestinationType) }}</td>
+              <td>{{ blank_when_empty(acc.RequestSectionName) }}</td>
+              <td>{{ blank_when_empty(acc.SubServiceLevelCode) }}</td>
+              <td>{{ acc.AllowBetween }}</td>
+              <td>{{ blank_when_empty(acc.ShippingInstruction) }}</td>
+              <td>{{ blank_when_empty(acc.RangeType) }}</td>
+              <td>{{ twodecs(acc.AccRateMinCharge)  }}</td>
+              <td>{{ twodecs(acc.AccRateMaxCharge) }}</td>
+              <td>{{ twodecs(acc.MinShipmentValue) }}</td>
+              <td>{{ twodecs(acc.MaxShipmentValue) }}</td>
+              <td>{{ twodecs(acc.Change) }}</td>
+              <td>{{ twodecs(acc.MinStdCharge) }}</td>
+              <td>{{ twodecs(acc.UsagePercentage) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+</body>
+</html>
